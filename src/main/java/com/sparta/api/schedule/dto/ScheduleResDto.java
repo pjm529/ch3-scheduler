@@ -4,7 +4,6 @@ import com.sparta.api.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -17,7 +16,10 @@ public class ScheduleResDto {
     private String schedule;
 
     @Schema(description = "작성자 명")
-    private String regNm;
+    private String writerNm;
+
+    @Schema(description = "작성자 이메일")
+    private String email;
 
     @Schema(description = "등록일")
     private String regDt;
@@ -30,7 +32,8 @@ public class ScheduleResDto {
 
         this.id = schedule.getId();
         this.schedule = schedule.getSchedule();
-        this.regNm = schedule.getRegNm();
+        this.writerNm = schedule.getWriter().getName();
+        this.email = schedule.getWriter().getEmail();
         this.regDt = formatter.format(schedule.getRegDt());
         this.modDt = formatter.format(schedule.getModDt());
     }

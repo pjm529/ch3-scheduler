@@ -30,8 +30,8 @@ public enum CommonExceptionResultMessage {
 	DB_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "요청 DB 처리 실패"),
 	VALID_FAIL(HttpStatus.BAD_REQUEST, "E002", "유효성 검증에 실패하였습니다."),
 	PW_MISMATCH(HttpStatus.UNAUTHORIZED, "E003", "비밀번호가 일치하지 않습니다."),
+	DUPLICATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "E004", "사용 중인 데이터입니다."),
 	NOT_FOUND(HttpStatus.NOT_FOUND, "E404", "NOT FOUND"),
-
 
 	UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E999", "알 수 없는 오류");
 

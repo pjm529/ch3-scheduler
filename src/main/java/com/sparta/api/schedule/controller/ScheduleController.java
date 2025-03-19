@@ -1,6 +1,7 @@
 package com.sparta.api.schedule.controller;
 
 import com.sparta.api.schedule.dto.ScheduleDelDto;
+import com.sparta.api.schedule.dto.ScheduleModDto;
 import com.sparta.api.schedule.dto.ScheduleReqDto;
 import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.service.ScheduleService;
@@ -45,8 +46,8 @@ public class ScheduleController {
             summary = "일정 목록 조회 API",
             description = "일정 목록을 조회하기 위한 API",
             parameters = {
-                    @Parameter(name = "modDt", description = "수정일")
-                    , @Parameter(name = "regNm", description = "등록자명")
+                    @Parameter(name = "writerId", description = "작성자 PK")
+                    , @Parameter(name = "modDt", description = "수정일")
             }
     )
     @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
@@ -54,9 +55,10 @@ public class ScheduleController {
             , CommonExceptionResultMessage.FAIL
     })
     public BaseResponse<List<ScheduleResDto>> findAllSchedule(
-            @RequestParam(required = false) String modDt
-            , @RequestParam(required = false) String regNm) {
-        return BaseResponse.from(scheduleService.findAllSchedule(modDt, regNm));
+            @RequestParam(required = false) Long writerId
+            , @RequestParam(required = false) String modDt
+    ) {
+        return BaseResponse.from(scheduleService.findAllSchedule(writerId, modDt));
     }
 
     @GetMapping("/{id}")
@@ -85,7 +87,7 @@ public class ScheduleController {
     })
     public BaseResponse<ScheduleResDto> updateSchedule(
             @Schema(description = "일정 PK") @PathVariable Long id,
-            @RequestBody @Valid ScheduleReqDto dto) {
+            @RequestBody @Valid ScheduleModDto dto) {
         return BaseResponse.from(scheduleService.updateSchedule(id, dto));
     }
 

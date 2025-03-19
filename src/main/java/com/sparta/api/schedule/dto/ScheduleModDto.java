@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class ScheduleReqDto {
+public class ScheduleModDto {
 
     @Schema(description = "일정 내용")
     @NotBlank
@@ -15,8 +15,4 @@ public class ScheduleReqDto {
     @Schema(description = "비밀번호")
     @NotBlank
     private String password;
-
-    @Schema(description = "작성자 이메일")
-    @NotBlank @Email
-    private String email;
 }

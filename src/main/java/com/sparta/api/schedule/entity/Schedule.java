@@ -1,5 +1,6 @@
 package com.sparta.api.schedule.entity;
 
+import com.sparta.api.writer.entity.Writer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,8 +12,6 @@ public class Schedule {
 
     private String schedule; // 일정 내용
 
-    private String regNm; // 작성자 명
-
     private String password; // 비밀번호
 
     private LocalDateTime regDt; // 작성일
@@ -21,20 +20,23 @@ public class Schedule {
 
     private LocalDateTime delDt; // 삭제일
 
-    public Schedule(String schedule, String regNm, String password, LocalDateTime regDt, LocalDateTime modDt) {
+    private Writer writer; // 작성자 정보
+
+    public Schedule(String schedule, String password, LocalDateTime regDt, LocalDateTime modDt, Writer writer) {
         this.schedule = schedule;
-        this.regNm = regNm;
         this.password = password;
         this.regDt = regDt;
         this.modDt = modDt;
+        this.writer = writer;
     }
 
-    public Schedule(Long id, String schedule, String regNm, String password, LocalDateTime regDt, LocalDateTime modDt) {
+    public Schedule(Long id, String schedule, String password, LocalDateTime regDt, LocalDateTime modDt
+            ,Long writerId, String name, String email, LocalDateTime writerRegDt, LocalDateTime writerModDt) {
         this.id = id;
         this.schedule = schedule;
-        this.regNm = regNm;
         this.password = password;
         this.regDt = regDt;
         this.modDt = modDt;
+        this.writer = new Writer(writerId, name, email, writerRegDt, writerModDt);
     }
 }
