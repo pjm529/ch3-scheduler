@@ -1,15 +1,13 @@
 package com.sparta.api.schedule.service.impl;
 
-import com.sparta.api.schedule.dto.ScheduleDelDto;
-import com.sparta.api.schedule.dto.ScheduleModDto;
-import com.sparta.api.schedule.dto.ScheduleReqDto;
-import com.sparta.api.schedule.dto.ScheduleResDto;
+import com.sparta.api.schedule.dto.*;
 import com.sparta.api.schedule.entity.Schedule;
 import com.sparta.api.schedule.repository.ScheduleRepository;
 import com.sparta.api.schedule.service.ScheduleService;
 import com.sparta.api.writer.entity.Writer;
 import com.sparta.api.writer.repository.WriterRepository;
 import com.sparta.common.component.CommonExceptionResultMessage;
+import com.sparta.common.component.CustomPageable;
 import com.sparta.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,8 +42,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResDto> findAllSchedule(Long writerId, String modDt) {
-        return scheduleRepository.findAllSchedule(writerId, modDt).stream()
+    public List<ScheduleResDto> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto) {
+        return scheduleRepository.findAllSchedule(pageable, dto).stream()
                 .map(ScheduleResDto::new) // 일정 목록 조회 후  mapping
                 .collect(Collectors.toList());
     }

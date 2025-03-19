@@ -1,8 +1,10 @@
 package com.sparta.api.schedule.repository.impl;
 
 
+import com.sparta.api.schedule.dto.ScheduleSearchDto;
 import com.sparta.api.schedule.entity.Schedule;
 import com.sparta.api.schedule.repository.ScheduleRepository;
+import com.sparta.common.component.CustomPageable;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,7 +43,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<Schedule> findAllSchedule(Long writerId, String modDt) {
+    public List<Schedule> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto) {
         List<Object> params = new ArrayList<>();
 
         StringBuilder query = new StringBuilder()
@@ -50,17 +52,22 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 .append(" FROM schedule a JOIN writer b ON a.writer_id = b.id\n")
                 .append(" WHERE a.del_dt IS NULL \n");
 
-        if (writerId != null) { // 작성자 PK 검색조건이 있을 경우
+        if (dto.getWriterId() != null) { // 작성자 PK 검색조건이 있을 경우
             query.append(" AND b.id = ? \n");
-            params.add(writerId);
+            params.add(dto.getWriterId());
         }
 
-        if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
+        if (StringUtils.isNotBlank(dto.getModDt())) { // 수정일 검색조건이 있을 경우
             query.append(" AND DATE(a.mod_dt) = ? \n");
-            params.add(modDt);
+            params.add(dto.getModDt());
         }
 
-        query.append(" ORDER BY mod_dt DESC");
+        query.append(" ORDER BY a.mod_dt DESC \n")
+                .append(" LIMIT ? OFFSET ?");
+
+        // 페이징 계산
+        params.add(pageable.getSize());               // LIMIT 몇 개 가져올지
+        params.add(pageable.getOffset());        // OFFSET (page 번호 * size)
 
         return jdbcTemplate.query(query.toString(), params.toArray(), this.scheduleRowMapper());
     }
