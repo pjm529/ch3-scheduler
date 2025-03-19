@@ -1,16 +1,16 @@
 package com.sparta.api.schedule.repository;
 
-import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.entity.Schedule;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleRepository {
-    ScheduleResDto saveSchedule(Schedule schedule);
+    Schedule saveSchedule(Schedule schedule);
 
-    List<ScheduleResDto> findAllSchedule(String modDt, String regNm);
+    List<Schedule> findAllSchedule(String modDt, String regNm);
 
-    ScheduleResDto findScheduleById(Long id);
+    Optional<Schedule> findScheduleById(Long id);
 
 
 }
