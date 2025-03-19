@@ -10,4 +10,6 @@ public interface ScheduleService {
     ScheduleResDto saveSchedule(ScheduleReqDto dto);
 
     List<ScheduleResDto> findAllSchedule(String modDt, String regNm);
+
+    ScheduleResDto findScheduleById(Long id);
 }

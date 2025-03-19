@@ -18,4 +18,21 @@ public class Schedule {
     private LocalDateTime regDt; // 작성일
 
     private LocalDateTime modDt; // 수정일
+
+    public Schedule(String schedule, String regNm, String password, LocalDateTime regDt, LocalDateTime modDt) {
+        this.schedule = schedule;
+        this.regNm = regNm;
+        this.password = password;
+        this.regDt = regDt;
+        this.modDt = modDt;
+    }
+
+    public Schedule(Long id, String schedule, String regNm, String password, LocalDateTime regDt, LocalDateTime modDt) {
+        this.id = id;
+        this.schedule = schedule;
+        this.regNm = regNm;
+        this.password = password;
+        this.regDt = regDt;
+        this.modDt = modDt;
+    }
 }

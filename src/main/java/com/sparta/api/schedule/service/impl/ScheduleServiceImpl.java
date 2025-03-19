@@ -8,8 +8,8 @@ import com.sparta.api.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("scheduleService")
@@ -19,16 +19,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final ModelMapper modelMapper;
-
     @Override
     public ScheduleResDto saveSchedule(ScheduleReqDto dto) {
-        Schedule schedule = modelMapper.map(dto, Schedule.class);
+        LocalDateTime now = LocalDateTime.now();
+        Schedule schedule = new Schedule(dto.getSchedule(), dto.getRegNm(), dto.getPassword(), now, now);
         return scheduleRepository.saveSchedule(schedule);
     }
 
     @Override
     public List<ScheduleResDto> findAllSchedule(String modDt, String regNm) {
         return scheduleRepository.findAllSchedule(modDt, regNm);
+    }
+
+    @Override
+    public ScheduleResDto findScheduleById(Long id) {
+        return scheduleRepository.findScheduleById(id);
     }
 }

@@ -10,4 +10,7 @@ public interface ScheduleRepository {
 
     List<ScheduleResDto> findAllSchedule(String modDt, String regNm);
 
+    ScheduleResDto findScheduleById(Long id);
+
+
 }

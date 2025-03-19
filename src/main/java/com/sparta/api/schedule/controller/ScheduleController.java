@@ -8,6 +8,7 @@ import com.sparta.common.component.BaseResponse;
 import com.sparta.common.component.CommonExceptionResultMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,18 @@ public class ScheduleController {
             @RequestParam(required = false) String modDt
             , @RequestParam(required = false) String regNm) {
         return BaseResponse.from(scheduleService.findAllSchedule(modDt, regNm));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "일정 상세 조회 API",
+            description = "일정 상세를 조회하기 위한 API"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<ScheduleResDto> findScheduleById(@Schema(description = "일정 PK") @PathVariable Long id) {
+        return BaseResponse.from(scheduleService.findScheduleById(id));
     }
 }
