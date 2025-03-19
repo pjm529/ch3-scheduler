@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import static com.sparta.common.component.CommonExceptionResultMessage.*;
 
 
@@ -68,6 +70,14 @@ public class JSONResult {
             .message(message)
             .build();
     }
+
+	public static JSONResult validFailBuilder(MethodArgumentNotValidException e, String message) {
+		return JSONResult.builder()
+				.status(VALID_FAIL.getStatus().value())
+				.code(VALID_FAIL.getCode())
+				.message(message)
+				.build();
+	}
 
 
 	public static JSONResult dbFailBuilder(DataAccessException e) {
