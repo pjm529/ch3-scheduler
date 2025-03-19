@@ -46,7 +46,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         StringBuilder query = new StringBuilder()
                 .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE 1 = 1 \n");
+                .append(" WHERE del_dt IS NULL \n");
 
         if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
             query.append(" AND DATE(mod_dt) = ? \n");
@@ -67,7 +67,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     public Optional<Schedule> findScheduleById(Long id) {
         StringBuilder query = new StringBuilder()
                 .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE id = ? \n");
+                .append(" WHERE id = ? AND del_dt IS NULL \n");
 
         List<Schedule> resultList = jdbcTemplate.query(query.toString(), this.scheduleRowMapper(), id);
         return resultList.stream().findAny();
@@ -80,7 +80,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 .append(" SET schedule = ? \n")
                 .append("   , reg_nm = ? \n")
                 .append("   , mod_dt = ? \n")
-                .append(" WHERE id = ?");
+                .append(" WHERE id = ? AND del_dt IS NULL ");
 
         List<Object> params = new ArrayList<>();
         params.add(schedule.getSchedule());
@@ -89,6 +89,20 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         params.add(schedule.getId());
 
         return jdbcTemplate.update(query.toString(), params.toArray()); // update row 수 return
+    }
+
+    @Override
+    public int deleteSchedule(Schedule schedule) {
+        StringBuilder query = new StringBuilder()
+                .append("UPDATE schedule \n")
+                .append(" SET del_dt = ? \n")
+                .append(" WHERE id = ? AND del_dt IS NULL");
+
+        List<Object> params = new ArrayList<>();
+        params.add(schedule.getDelDt());
+        params.add(schedule.getId());
+
+        return jdbcTemplate.update(query.toString(), params.toArray()); // delete row 수 return
     }
 
     private RowMapper<Schedule> scheduleRowMapper() {

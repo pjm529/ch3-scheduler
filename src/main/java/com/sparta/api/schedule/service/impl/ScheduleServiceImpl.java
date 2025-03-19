@@ -1,5 +1,6 @@
 package com.sparta.api.schedule.service.impl;
 
+import com.sparta.api.schedule.dto.ScheduleDelDto;
 import com.sparta.api.schedule.dto.ScheduleReqDto;
 import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.entity.Schedule;
@@ -73,5 +74,26 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         return new ScheduleResDto(schedule);
+    }
+
+    @Override
+    public void deleteSchedule(Long id, ScheduleDelDto dto) {
+        // 유효한 일정인지 조회
+        Schedule schedule = scheduleRepository.findScheduleById(id)
+                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
+
+        String pw = schedule.getPassword();
+
+        // 비밀번호 검사
+        if (!passwordEncoder.matches(dto.getPassword(), pw)) {
+            throw new CustomException(CommonExceptionResultMessage.PW_MISMATCH);
+        }
+
+        schedule.setDelDt(LocalDateTime.now()); // 삭제 시간
+
+        int result = scheduleRepository.deleteSchedule(schedule); // 일정 삭제
+        if (result == 0) { // update 된 row 가 없으면 throw
+            throw new CustomException(CommonExceptionResultMessage.DB_FAIL);
+        }
     }
 }

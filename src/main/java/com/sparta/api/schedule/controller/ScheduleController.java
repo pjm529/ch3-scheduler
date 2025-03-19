@@ -1,5 +1,6 @@
 package com.sparta.api.schedule.controller;
 
+import com.sparta.api.schedule.dto.ScheduleDelDto;
 import com.sparta.api.schedule.dto.ScheduleReqDto;
 import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.service.ScheduleService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,5 +87,23 @@ public class ScheduleController {
             @Schema(description = "일정 PK") @PathVariable Long id,
             @RequestBody @Valid ScheduleReqDto dto) {
         return BaseResponse.from(scheduleService.updateSchedule(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(
+            summary = "일정 삭제 API",
+            description = "일정 삭제하기 위한 API"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.VALID_FAIL
+            , CommonExceptionResultMessage.PW_MISMATCH
+            , CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<Boolean> deleteSchedule(
+            @Schema(description = "일정 PK") @PathVariable Long id,
+            @RequestBody @Valid ScheduleDelDto dto) {
+        scheduleService.deleteSchedule(id, dto);
+        return BaseResponse.from(true);
     }
 }

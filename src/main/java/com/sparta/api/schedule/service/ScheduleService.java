@@ -1,5 +1,6 @@
 package com.sparta.api.schedule.service;
 
+import com.sparta.api.schedule.dto.ScheduleDelDto;
 import com.sparta.api.schedule.dto.ScheduleReqDto;
 import com.sparta.api.schedule.dto.ScheduleResDto;
 
@@ -15,4 +16,5 @@ public interface ScheduleService {
 
     ScheduleResDto updateSchedule(Long id, ScheduleReqDto dto); // 일정 저장
 
+    void deleteSchedule(Long id, ScheduleDelDto dto); // 일정 삭제
 }
