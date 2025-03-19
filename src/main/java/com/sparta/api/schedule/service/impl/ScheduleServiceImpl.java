@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
+
 @Service("scheduleService")
 @RequiredArgsConstructor
 @Transactional
@@ -23,5 +25,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResDto saveSchedule(ScheduleReqDto dto) {
         Schedule schedule = modelMapper.map(dto, Schedule.class);
         return scheduleRepository.saveSchedule(schedule);
+    }
+
+    @Override
+    public List<ScheduleResDto> findAllSchedule() {
+        return scheduleRepository.findAllSchedule();
     }
 }

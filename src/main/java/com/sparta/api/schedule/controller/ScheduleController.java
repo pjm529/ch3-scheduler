@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")
@@ -24,13 +26,26 @@ public class ScheduleController {
     @PostMapping
     @Operation(
             summary = "일정 등록 API",
-            description = "이메일을 등록하기 위한 API"
+            description = "일정 등록하기 위한 API"
     )
     @ApiErrorCodeExamples({CommonExceptionResultMessage.VALID_FAIL
             , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
     })
     public BaseResponse<ScheduleResDto> saveSchedule(@RequestBody @Valid ScheduleReqDto dto) {
         return BaseResponse.from(scheduleService.saveSchedule(dto));
+    }
 
+    @GetMapping
+    @Operation(
+            summary = "일정 목록 조회 API",
+            description = "일정 목록을 조회하기 위한 API"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<List<ScheduleResDto>> findAllSchedule() {
+        return BaseResponse.from(scheduleService.findAllSchedule());
     }
 }
