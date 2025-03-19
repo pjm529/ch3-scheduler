@@ -26,4 +26,13 @@ public class Writer {
         this.regDt = regDt;
         this.modDt = modDt;
     }
+
+    public Writer(Long id, String name, String email, String password, LocalDateTime regDt, LocalDateTime modDt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.regDt = regDt;
+        this.modDt = modDt;
+    }
 }
