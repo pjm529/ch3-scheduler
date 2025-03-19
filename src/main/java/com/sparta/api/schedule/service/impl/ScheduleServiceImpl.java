@@ -21,7 +21,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResDto saveSchedule(ScheduleReqDto dto) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(); // 현재 시각
         Schedule schedule = new Schedule(dto.getSchedule(), dto.getRegNm(), dto.getPassword(), now, now);
         return scheduleRepository.saveSchedule(schedule);
     }
