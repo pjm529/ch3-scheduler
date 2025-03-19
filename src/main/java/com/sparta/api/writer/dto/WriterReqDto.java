@@ -9,10 +9,11 @@ import lombok.Data;
 public class WriterReqDto {
 
     @Schema(description = "이름")
-    @NotBlank
+    @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 
     @Schema(description = "이메일")
-    @NotBlank @Email
+    @NotBlank(message = "이메일을 입력해주세요.")
+    @Email(message = "유효하지 않는 이메일입니다.")
     private String email;
 }

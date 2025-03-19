@@ -1,13 +1,12 @@
 package com.sparta.api.schedule.controller;
 
-import com.sparta.api.schedule.dto.ScheduleDelDto;
-import com.sparta.api.schedule.dto.ScheduleModDto;
-import com.sparta.api.schedule.dto.ScheduleReqDto;
-import com.sparta.api.schedule.dto.ScheduleResDto;
+import com.sparta.api.schedule.dto.*;
 import com.sparta.api.schedule.service.ScheduleService;
 import com.sparta.common.annotation.ApiErrorCodeExamples;
 import com.sparta.common.component.BaseResponse;
 import com.sparta.common.component.CommonExceptionResultMessage;
+import com.sparta.common.component.CustomPageable;
+import com.sparta.common.component.PaginationResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,21 +44,14 @@ public class ScheduleController {
     @GetMapping
     @Operation(
             summary = "일정 목록 조회 API",
-            description = "일정 목록을 조회하기 위한 API",
-            parameters = {
-                    @Parameter(name = "writerId", description = "작성자 PK")
-                    , @Parameter(name = "modDt", description = "수정일")
-            }
+            description = "일정 목록을 조회하기 위한 API"
     )
     @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
             , CommonExceptionResultMessage.DB_FAIL
             , CommonExceptionResultMessage.FAIL
     })
-    public BaseResponse<List<ScheduleResDto>> findAllSchedule(
-            @RequestParam(required = false) Long writerId
-            , @RequestParam(required = false) String modDt
-    ) {
-        return BaseResponse.from(scheduleService.findAllSchedule(writerId, modDt));
+    public BaseResponse<PaginationResDto<ScheduleResDto>> findAllSchedule(@ParameterObject @Valid CustomPageable pageable, @ParameterObject ScheduleSearchDto dto) {
+        return BaseResponse.from(scheduleService.findAllSchedule(pageable, dto));
     }
 
     @GetMapping("/{id}")

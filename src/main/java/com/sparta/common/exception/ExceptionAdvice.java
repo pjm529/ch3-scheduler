@@ -89,9 +89,8 @@ public class ExceptionAdvice {
         FieldError fieldError = fieldErrors.get(fieldErrors.size() - 1);  // 가장 첫 번째 에러 필드
         String fieldName = fieldError.getField();   // 필드명
         Object rejectedValue = fieldError.getRejectedValue();   // 입력값
-
         BaseResponse res = new BaseResponse();
-        res.setJsonResult(JSONResult.validFailBuilder(e, fieldName + " 필드의 입력값 [ " + rejectedValue + " ]이 유효하지 않습니다."));
+        res.setJsonResult(JSONResult.validFailBuilder(e, fieldError.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
