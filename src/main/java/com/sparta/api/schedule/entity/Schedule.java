@@ -30,11 +30,13 @@ public class Schedule {
         this.writer = writer;
     }
 
-    public Schedule(Long id, String schedule, String password, LocalDateTime regDt, LocalDateTime modDt) {
+    public Schedule(Long id, String schedule, String password, LocalDateTime regDt, LocalDateTime modDt
+            ,Long writerId, String name, String email, LocalDateTime writerRegDt, LocalDateTime writerModDt) {
         this.id = id;
         this.schedule = schedule;
         this.password = password;
         this.regDt = regDt;
         this.modDt = modDt;
+        this.writer = new Writer(writerId, name, email, writerRegDt, writerModDt);
     }
 }

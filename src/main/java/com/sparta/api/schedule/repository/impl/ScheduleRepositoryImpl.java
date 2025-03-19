@@ -41,21 +41,23 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<Schedule> findAllSchedule(String modDt, String regNm) {
+    public List<Schedule> findAllSchedule(Long writerId, String modDt) {
         List<Object> params = new ArrayList<>();
 
         StringBuilder query = new StringBuilder()
-                .append("SELECT id, schedule, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE del_dt IS NULL \n");
+                .append("SELECT a.id, a.schedule, a.password, a.reg_dt, a.mod_dt\n")
+                .append(" ,b.id AS writer_id, b.email, b.name, b.reg_dt as writer_reg_dt, b.mod_dt as writer_mod_dt\n")
+                .append(" FROM schedule a JOIN writer b ON a.writer_id = b.id\n")
+                .append(" WHERE a.del_dt IS NULL \n");
 
-        if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
-            query.append(" AND DATE(mod_dt) = ? \n");
-            params.add(modDt);
+        if (writerId != null) { // 작성자 PK 검색조건이 있을 경우
+            query.append(" AND b.id = ? \n");
+            params.add(writerId);
         }
 
-        if (StringUtils.isNotBlank(regNm)) { // 작성자명 검색조건이 있을 경우
-            query.append(" AND reg_nm = ? \n");
-            params.add(regNm);
+        if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
+            query.append(" AND DATE(a.mod_dt) = ? \n");
+            params.add(modDt);
         }
 
         query.append(" ORDER BY mod_dt DESC");
@@ -66,8 +68,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public Optional<Schedule> findScheduleById(Long id) {
         StringBuilder query = new StringBuilder()
-                .append("SELECT id, schedule, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE id = ? AND del_dt IS NULL \n");
+                .append("SELECT a.id, a.schedule, a.password, a.reg_dt, a.mod_dt\n")
+                .append(" ,b.id AS writer_id, b.email, b.name, b.reg_dt as writer_reg_dt, b.mod_dt as writer_mod_dt\n")
+                .append(" FROM schedule a JOIN writer b ON a.writer_id = b.id\n")
+                .append(" WHERE a.id = ? AND a.del_dt IS NULL \n");
 
         List<Schedule> resultList = jdbcTemplate.query(query.toString(), this.scheduleRowMapper(), id);
         return resultList.stream().findAny();
@@ -78,7 +82,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         StringBuilder query = new StringBuilder()
                 .append("UPDATE schedule \n")
                 .append(" SET schedule = ? \n")
-                .append("   , reg_nm = ? \n")
                 .append("   , mod_dt = ? \n")
                 .append(" WHERE id = ? AND del_dt IS NULL ");
 
@@ -110,7 +113,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 rs.getString("schedule"),
                 rs.getString("password"),
                 rs.getTimestamp("reg_dt").toLocalDateTime(),
-                rs.getTimestamp("mod_dt").toLocalDateTime()
+                rs.getTimestamp("mod_dt").toLocalDateTime(),
+                rs.getLong("writer_id"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getTimestamp("writer_reg_dt").toLocalDateTime(),
+                rs.getTimestamp("writer_mod_dt").toLocalDateTime()
         );
     }
 }
