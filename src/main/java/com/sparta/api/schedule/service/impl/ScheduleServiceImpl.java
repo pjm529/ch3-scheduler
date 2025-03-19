@@ -37,14 +37,41 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResDto> findAllSchedule(String modDt, String regNm) {
         return scheduleRepository.findAllSchedule(modDt, regNm).stream()
-                .map(ScheduleResDto::new)
+                .map(ScheduleResDto::new) // 일정 목록 조회 후  mapping
                 .collect(Collectors.toList());
     }
 
     @Override
     public ScheduleResDto findScheduleById(Long id) {
         return scheduleRepository.findScheduleById(id)
-                .map(ScheduleResDto::new)
+                .map(ScheduleResDto::new) // 일정 조회 후 mapping
                 .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
+    }
+
+    @Override
+    public ScheduleResDto updateSchedule(Long id, ScheduleReqDto dto) {
+        // 유효한 일정인지 조회
+        Schedule schedule = scheduleRepository.findScheduleById(id)
+                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
+
+        String pw = schedule.getPassword();
+
+        // 비밀번호 검사
+        if (!passwordEncoder.matches(dto.getPassword(), pw)) {
+            throw new CustomException(CommonExceptionResultMessage.PW_MISMATCH);
+        }
+
+        // 새로운 정보 update
+        schedule.setSchedule(dto.getSchedule()); // 일정
+        schedule.setRegNm(dto.getRegNm()); // 작성자명
+        schedule.setModDt(LocalDateTime.now()); // 수정 시간
+
+        // 일정 수정
+        int result = scheduleRepository.updateSchedule(schedule);
+        if (result == 0) { // update 된 row 가 없으면 throw
+            throw new CustomException(CommonExceptionResultMessage.DB_FAIL);
+        }
+
+        return new ScheduleResDto(schedule);
     }
 }

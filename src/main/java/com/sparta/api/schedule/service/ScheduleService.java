@@ -12,4 +12,7 @@ public interface ScheduleService {
     List<ScheduleResDto> findAllSchedule(String modDt, String regNm); // 일정 목록 조회
 
     ScheduleResDto findScheduleById(Long id); // 일정 상세 조회
+
+    ScheduleResDto updateSchedule(Long id, ScheduleReqDto dto); // 일정 저장
+
 }

@@ -69,4 +69,21 @@ public class ScheduleController {
     public BaseResponse<ScheduleResDto> findScheduleById(@Schema(description = "일정 PK") @PathVariable Long id) {
         return BaseResponse.from(scheduleService.findScheduleById(id));
     }
+
+    @PutMapping("/{id}")
+    @Operation(
+            summary = "일정 수정 API",
+            description = "일정 수정하기 위한 API"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.VALID_FAIL
+            , CommonExceptionResultMessage.PW_MISMATCH
+            , CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<ScheduleResDto> updateSchedule(
+            @Schema(description = "일정 PK") @PathVariable Long id,
+            @RequestBody @Valid ScheduleReqDto dto) {
+        return BaseResponse.from(scheduleService.updateSchedule(id, dto));
+    }
 }

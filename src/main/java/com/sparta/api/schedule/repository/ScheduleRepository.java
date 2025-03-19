@@ -12,5 +12,5 @@ public interface ScheduleRepository {
 
     Optional<Schedule> findScheduleById(Long id);
 
-
+    int updateSchedule(Schedule schedule);
 }

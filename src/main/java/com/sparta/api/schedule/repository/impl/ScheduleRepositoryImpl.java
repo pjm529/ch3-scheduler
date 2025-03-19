@@ -73,6 +73,24 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return resultList.stream().findAny();
     }
 
+    @Override
+    public int updateSchedule(Schedule schedule) {
+        StringBuilder query = new StringBuilder()
+                .append("UPDATE schedule \n")
+                .append(" SET schedule = ? \n")
+                .append("   , reg_nm = ? \n")
+                .append("   , mod_dt = ? \n")
+                .append(" WHERE id = ?");
+
+        List<Object> params = new ArrayList<>();
+        params.add(schedule.getSchedule());
+        params.add(schedule.getRegNm());
+        params.add(schedule.getModDt());
+        params.add(schedule.getId());
+
+        return jdbcTemplate.update(query.toString(), params.toArray()); // update row 수 return
+    }
+
     private RowMapper<Schedule> scheduleRowMapper() {
         return (rs, rowNum) -> new Schedule(
                 rs.getLong("id"),
