@@ -8,6 +8,7 @@ import com.sparta.api.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,10 +20,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
+    private final PasswordEncoder passwordEncoder;
     @Override
     public ScheduleResDto saveSchedule(ScheduleReqDto dto) {
         LocalDateTime now = LocalDateTime.now(); // 현재 시각
-        Schedule schedule = new Schedule(dto.getSchedule(), dto.getRegNm(), dto.getPassword(), now, now);
+        String encodePw = passwordEncoder.encode(dto.getPassword()); // 비밀번호 암호화
+
+        Schedule schedule = new Schedule(dto.getSchedule(), dto.getRegNm(), encodePw, now, now);
         return scheduleRepository.saveSchedule(schedule);
     }
 
