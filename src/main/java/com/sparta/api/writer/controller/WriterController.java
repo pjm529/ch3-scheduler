@@ -7,6 +7,7 @@ import com.sparta.common.annotation.ApiErrorCodeExamples;
 import com.sparta.common.component.BaseResponse;
 import com.sparta.common.component.CommonExceptionResultMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,20 @@ public class WriterController {
     })
     public BaseResponse<WriterResDto> saveWriter(@RequestBody @Valid WriterReqDto dto) {
         return BaseResponse.from(writerService.saveWriter(dto));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "작성자 상세 조회 API",
+            description = "작성자 상세 조회 API"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.VALID_FAIL
+            , CommonExceptionResultMessage.PW_MISMATCH
+            , CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<WriterResDto> findWriterById(@Schema(description = "작성자 PK") @PathVariable Long id) {
+        return BaseResponse.from(writerService.findWriterById(id));
     }
 }

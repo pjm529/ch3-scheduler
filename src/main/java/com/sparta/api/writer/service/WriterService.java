@@ -5,4 +5,6 @@ import com.sparta.api.writer.dto.WriterResDto;
 
 public interface WriterService {
     WriterResDto saveWriter(WriterReqDto dto);
+
+    WriterResDto findWriterById(Long id);
 }

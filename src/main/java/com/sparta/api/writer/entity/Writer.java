@@ -13,25 +13,21 @@ public class Writer {
 
     private String email; // 이메일
 
-    private String password; // 비밀번호
-
     private LocalDateTime regDt; // 등록일
 
     private LocalDateTime modDt; // 수정일
 
-    public Writer(String name, String email, String password, LocalDateTime regDt, LocalDateTime modDt) {
+    public Writer(String name, String email, LocalDateTime regDt, LocalDateTime modDt) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.regDt = regDt;
         this.modDt = modDt;
     }
 
-    public Writer(Long id, String name, String email, String password, LocalDateTime regDt, LocalDateTime modDt) {
+    public Writer(Long id, String name, String email, LocalDateTime regDt, LocalDateTime modDt) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.regDt = regDt;
         this.modDt = modDt;
     }

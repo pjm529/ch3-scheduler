@@ -10,4 +10,6 @@ public interface WriterRepository {
 
     Optional<Writer> findWriterByEmail(String email);
 
+    Optional<Writer> findWriterById(Long id);
+
 }

@@ -32,7 +32,6 @@ public class WriterRepositoryImpl implements WriterRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", writer.getName());
         parameters.put("email", writer.getEmail());
-        parameters.put("password", writer.getPassword());
         parameters.put("regDt", writer.getRegDt());
         parameters.put("modDt", writer.getModDt());
 
@@ -45,10 +44,20 @@ public class WriterRepositoryImpl implements WriterRepository {
     @Override
     public Optional<Writer> findWriterByEmail(String email) {
         StringBuilder query = new StringBuilder()
-                .append("SELECT id, name, email, password, reg_dt, mod_dt FROM writer \n")
+                .append("SELECT id, name, email, reg_dt, mod_dt FROM writer \n")
                 .append(" WHERE email = ? \n");
 
         List<Writer> resultList = jdbcTemplate.query(query.toString(), this.writerRowMapper(), email);
+        return resultList.stream().findAny();
+    }
+
+    @Override
+    public Optional<Writer> findWriterById(Long id) {
+        StringBuilder query = new StringBuilder()
+                .append("SELECT id, name, email, reg_dt, mod_dt FROM writer \n")
+                .append(" WHERE id = ? \n");
+
+        List<Writer> resultList = jdbcTemplate.query(query.toString(), this.writerRowMapper(), id);
         return resultList.stream().findAny();
     }
 
@@ -57,7 +66,6 @@ public class WriterRepositoryImpl implements WriterRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("email"),
-                rs.getString("password"),
                 rs.getTimestamp("reg_dt").toLocalDateTime(),
                 rs.getTimestamp("mod_dt").toLocalDateTime()
         );

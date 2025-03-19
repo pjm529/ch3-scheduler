@@ -15,8 +15,4 @@ public class WriterReqDto {
     @Schema(description = "이메일")
     @NotBlank @Email
     private String email;
-
-    @Schema(description = "비밀번호")
-    @NotBlank
-    private String password;
 }
