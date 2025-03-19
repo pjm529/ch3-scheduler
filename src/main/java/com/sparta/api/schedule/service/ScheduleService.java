@@ -2,6 +2,7 @@ package com.sparta.api.schedule.service;
 
 import com.sparta.api.schedule.dto.*;
 import com.sparta.common.component.CustomPageable;
+import com.sparta.common.component.PaginationResDto;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface ScheduleService {
 
     ScheduleResDto saveSchedule(ScheduleReqDto dto); // 일정 저장
 
-    List<ScheduleResDto> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto); // 일정 목록 조회
+    PaginationResDto<ScheduleResDto> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto); // 일정 목록 조회
 
     ScheduleResDto findScheduleById(Long id); // 일정 상세 조회
 

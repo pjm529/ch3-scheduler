@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class ScheduleDelDto {
     @Schema(description = "비밀번호")
-    @NotBlank
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 }

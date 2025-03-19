@@ -6,6 +6,7 @@ import com.sparta.common.annotation.ApiErrorCodeExamples;
 import com.sparta.common.component.BaseResponse;
 import com.sparta.common.component.CommonExceptionResultMessage;
 import com.sparta.common.component.CustomPageable;
+import com.sparta.common.component.PaginationResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,7 +50,7 @@ public class ScheduleController {
             , CommonExceptionResultMessage.DB_FAIL
             , CommonExceptionResultMessage.FAIL
     })
-    public BaseResponse<List<ScheduleResDto>> findAllSchedule(@ParameterObject CustomPageable pageable, @ParameterObject ScheduleSearchDto dto) {
+    public BaseResponse<PaginationResDto<ScheduleResDto>> findAllSchedule(@ParameterObject @Valid CustomPageable pageable, @ParameterObject ScheduleSearchDto dto) {
         return BaseResponse.from(scheduleService.findAllSchedule(pageable, dto));
     }
 

@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface ScheduleRepository {
     Schedule saveSchedule(Schedule schedule);
 
+    long findAllScheduleCount(ScheduleSearchDto dto);
+
     List<Schedule> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto);
 
     Optional<Schedule> findScheduleById(Long id);

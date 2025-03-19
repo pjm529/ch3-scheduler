@@ -9,10 +9,10 @@ import lombok.Data;
 public class ScheduleModDto {
 
     @Schema(description = "일정 내용")
-    @NotBlank
+    @NotBlank(message = "일정 내용을 입력해주세요.")
     private String schedule;
 
     @Schema(description = "비밀번호")
-    @NotBlank
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 }

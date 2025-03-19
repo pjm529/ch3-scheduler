@@ -43,6 +43,28 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
+    public long findAllScheduleCount(ScheduleSearchDto dto) {
+        List<Object> params = new ArrayList<>();
+
+        StringBuilder query = new StringBuilder()
+                .append("SELECT count(*) \n")
+                .append(" FROM schedule a JOIN writer b ON a.writer_id = b.id\n")
+                .append(" WHERE a.del_dt IS NULL \n");
+
+        if (dto.getWriterId() != null) { // 작성자 PK 검색조건이 있을 경우
+            query.append(" AND b.id = ? \n");
+            params.add(dto.getWriterId());
+        }
+
+        if (StringUtils.isNotBlank(dto.getModDt())) { // 수정일 검색조건이 있을 경우
+            query.append(" AND DATE(a.mod_dt) = ? \n");
+            params.add(dto.getModDt());
+        }
+
+        return jdbcTemplate.queryForObject(query.toString(), params.toArray(), Long.class);
+    }
+
+    @Override
     public List<Schedule> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto) {
         List<Object> params = new ArrayList<>();
 

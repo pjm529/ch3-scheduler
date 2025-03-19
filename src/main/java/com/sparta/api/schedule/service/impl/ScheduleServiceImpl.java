@@ -8,6 +8,7 @@ import com.sparta.api.writer.entity.Writer;
 import com.sparta.api.writer.repository.WriterRepository;
 import com.sparta.common.component.CommonExceptionResultMessage;
 import com.sparta.common.component.CustomPageable;
+import com.sparta.common.component.PaginationResDto;
 import com.sparta.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,20 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResDto> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto) {
-        return scheduleRepository.findAllSchedule(pageable, dto).stream()
+    public PaginationResDto<ScheduleResDto> findAllSchedule(CustomPageable pageable, ScheduleSearchDto dto) {
+        long totalCnt = scheduleRepository.findAllScheduleCount(dto);
+
+        List<ScheduleResDto> resultList = scheduleRepository.findAllSchedule(pageable, dto).stream()
                 .map(ScheduleResDto::new) // 일정 목록 조회 후  mapping
                 .collect(Collectors.toList());
+
+        return PaginationResDto.<ScheduleResDto>builder()
+                .data(resultList)
+                .total(totalCnt)
+                .size(pageable.getSize())
+                .page(pageable.getPage())
+                .totalPages((totalCnt + pageable.getSize() - 1) / pageable.getSize())
+                .build();
     }
 
     @Override
