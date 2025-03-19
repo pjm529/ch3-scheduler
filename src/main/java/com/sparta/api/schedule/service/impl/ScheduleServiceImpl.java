@@ -52,15 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResDto updateSchedule(Long id, ScheduleReqDto dto) {
         // 유효한 일정인지 조회
-        Schedule schedule = scheduleRepository.findScheduleById(id)
-                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
-
-        String pw = schedule.getPassword();
-
-        // 비밀번호 검사
-        if (!passwordEncoder.matches(dto.getPassword(), pw)) {
-            throw new CustomException(CommonExceptionResultMessage.PW_MISMATCH);
-        }
+        Schedule schedule = this.validSchedule(id, dto.getPassword());
 
         // 새로운 정보 update
         schedule.setSchedule(dto.getSchedule()); // 일정
@@ -79,15 +71,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void deleteSchedule(Long id, ScheduleDelDto dto) {
         // 유효한 일정인지 조회
-        Schedule schedule = scheduleRepository.findScheduleById(id)
-                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
-
-        String pw = schedule.getPassword();
-
-        // 비밀번호 검사
-        if (!passwordEncoder.matches(dto.getPassword(), pw)) {
-            throw new CustomException(CommonExceptionResultMessage.PW_MISMATCH);
-        }
+        Schedule schedule = this.validSchedule(id, dto.getPassword());
 
         schedule.setDelDt(LocalDateTime.now()); // 삭제 시간
 
@@ -96,4 +80,20 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new CustomException(CommonExceptionResultMessage.DB_FAIL);
         }
     }
+
+    private Schedule validSchedule(Long id, String inputPw) {
+        // 유효한 일정인지 조회
+        Schedule schedule = scheduleRepository.findScheduleById(id)
+                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + " 에 해당하는 일정 없음"));
+
+        String pw = schedule.getPassword();
+
+        // 비밀번호 검사
+        if (!passwordEncoder.matches(inputPw, pw)) {
+            throw new CustomException(CommonExceptionResultMessage.PW_MISMATCH);
+        }
+
+        return schedule;
+    }
+
 }
