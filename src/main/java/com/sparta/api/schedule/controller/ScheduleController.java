@@ -7,6 +7,7 @@ import com.sparta.common.annotation.ApiErrorCodeExamples;
 import com.sparta.common.component.BaseResponse;
 import com.sparta.common.component.CommonExceptionResultMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +40,19 @@ public class ScheduleController {
     @GetMapping
     @Operation(
             summary = "일정 목록 조회 API",
-            description = "일정 목록을 조회하기 위한 API"
+            description = "일정 목록을 조회하기 위한 API",
+            parameters = {
+                    @Parameter(name = "modDt", description = "수정일")
+                    , @Parameter(name = "regNm", description = "등록자명")
+            }
     )
     @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
             , CommonExceptionResultMessage.DB_FAIL
             , CommonExceptionResultMessage.FAIL
     })
-    public BaseResponse<List<ScheduleResDto>> findAllSchedule() {
-        return BaseResponse.from(scheduleService.findAllSchedule());
+    public BaseResponse<List<ScheduleResDto>> findAllSchedule(
+            @RequestParam(required = false) String modDt
+            , @RequestParam(required = false) String regNm) {
+        return BaseResponse.from(scheduleService.findAllSchedule(modDt, regNm));
     }
 }

@@ -28,7 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResDto> findAllSchedule() {
-        return scheduleRepository.findAllSchedule();
+    public List<ScheduleResDto> findAllSchedule(String modDt, String regNm) {
+        return scheduleRepository.findAllSchedule(modDt, regNm);
     }
 }

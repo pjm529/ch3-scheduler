@@ -4,6 +4,7 @@ package com.sparta.api.schedule.repository.impl;
 import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.entity.Schedule;
 import com.sparta.api.schedule.repository.ScheduleRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,9 +12,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +47,25 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResDto> findAllSchedule() {
-        return jdbcTemplate.query("select * from schedule order by mod_dt desc", this.scheduleRowMapper());
+    public List<ScheduleResDto> findAllSchedule(String modDt, String regNm) {
+        List<Object> params = new ArrayList<>();
+
+        StringBuilder query = new StringBuilder()
+                .append("SELECT id, schedule, reg_nm, reg_dt, mod_dt FROM schedule \n")
+                .append(" WHERE 1 = 1 \n");
+
+        if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
+            query.append(" AND DATE(mod_dt) = ? \n");
+            params.add(modDt);
+        }
+
+        if (StringUtils.isNotBlank(regNm)) { // 작성자명 검색조건이 있을 경우
+            query.append(" AND reg_nm = ? \n");
+            params.add(regNm);
+        }
+
+        query.append(" ORDER BY mod_dt DESC");
+        return jdbcTemplate.query(query.toString(), params.toArray(), this.scheduleRowMapper());
     }
 
     private RowMapper<ScheduleResDto> scheduleRowMapper() {

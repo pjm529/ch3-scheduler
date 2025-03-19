@@ -8,6 +8,6 @@ import java.util.List;
 public interface ScheduleRepository {
     ScheduleResDto saveSchedule(Schedule schedule);
 
-    List<ScheduleResDto> findAllSchedule();
+    List<ScheduleResDto> findAllSchedule(String modDt, String regNm);
 
 }
