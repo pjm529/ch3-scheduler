@@ -1,11 +1,8 @@
 package com.sparta.api.schedule.repository.impl;
 
 
-import com.sparta.api.schedule.dto.ScheduleResDto;
 import com.sparta.api.schedule.entity.Schedule;
 import com.sparta.api.schedule.repository.ScheduleRepository;
-import com.sparta.common.component.CommonExceptionResultMessage;
-import com.sparta.common.exception.CustomException;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,11 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Repository("scheduleRepository")
 public class ScheduleRepositoryImpl implements ScheduleRepository {
@@ -30,7 +23,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public ScheduleResDto saveSchedule(Schedule schedule) {
+    public Schedule saveSchedule(Schedule schedule) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("schedule").usingGeneratedKeyColumns("id");
 
@@ -44,16 +37,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)); // PK Return
         schedule.setId(key.longValue());
 
-        return new ScheduleResDto(schedule);
+        return schedule;
     }
 
     @Override
-    public List<ScheduleResDto> findAllSchedule(String modDt, String regNm) {
+    public List<Schedule> findAllSchedule(String modDt, String regNm) {
         List<Object> params = new ArrayList<>();
 
         StringBuilder query = new StringBuilder()
                 .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE 1 = 1 \n");
+                .append(" WHERE del_dt IS NULL \n");
 
         if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
             query.append(" AND DATE(mod_dt) = ? \n");
@@ -67,23 +60,49 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         query.append(" ORDER BY mod_dt DESC");
 
-        List<Schedule> resultList = jdbcTemplate.query(query.toString(), params.toArray(), this.scheduleRowMapper());
-        return resultList.stream()
-                .map(ScheduleResDto::new)
-                .collect(Collectors.toList());
+        return jdbcTemplate.query(query.toString(), params.toArray(), this.scheduleRowMapper());
     }
 
     @Override
-    public ScheduleResDto findScheduleById(Long id) {
+    public Optional<Schedule> findScheduleById(Long id) {
         StringBuilder query = new StringBuilder()
                 .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
-                .append(" WHERE id = ? \n");
+                .append(" WHERE id = ? AND del_dt IS NULL \n");
 
         List<Schedule> resultList = jdbcTemplate.query(query.toString(), this.scheduleRowMapper(), id);
+        return resultList.stream().findAny();
+    }
 
-        return resultList.stream().findAny()
-                .map(ScheduleResDto::new)
-                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "일정 조회 실패: ID " + id + "에 해당하는 일정 없음"));
+    @Override
+    public int updateSchedule(Schedule schedule) {
+        StringBuilder query = new StringBuilder()
+                .append("UPDATE schedule \n")
+                .append(" SET schedule = ? \n")
+                .append("   , reg_nm = ? \n")
+                .append("   , mod_dt = ? \n")
+                .append(" WHERE id = ? AND del_dt IS NULL ");
+
+        List<Object> params = new ArrayList<>();
+        params.add(schedule.getSchedule());
+        params.add(schedule.getRegNm());
+        params.add(schedule.getModDt());
+        params.add(schedule.getId());
+
+        return jdbcTemplate.update(query.toString(), params.toArray()); // update row 수 return
+    }
+
+    @Override
+    public int deleteSchedule(Schedule schedule) {
+        StringBuilder query = new StringBuilder()
+                .append("UPDATE schedule \n")
+                .append(" SET del_dt = ? \n")
+                .append(" WHERE id = ? AND del_dt IS NULL");
+
+        List<Object> params = new ArrayList<>();
+        params.add(schedule.getDelDt());
+        params.add(schedule.getId());
+
+        return jdbcTemplate.update(query.toString(), params.toArray()); // delete row 수 return
     }
 
     private RowMapper<Schedule> scheduleRowMapper() {

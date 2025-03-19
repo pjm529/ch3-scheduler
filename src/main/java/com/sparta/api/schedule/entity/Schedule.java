@@ -19,6 +19,8 @@ public class Schedule {
 
     private LocalDateTime modDt; // 수정일
 
+    private LocalDateTime delDt; // 삭제일
+
     public Schedule(String schedule, String regNm, String password, LocalDateTime regDt, LocalDateTime modDt) {
         this.schedule = schedule;
         this.regNm = regNm;
