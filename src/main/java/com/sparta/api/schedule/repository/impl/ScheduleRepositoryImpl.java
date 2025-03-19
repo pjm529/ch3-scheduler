@@ -29,10 +29,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("schedule", schedule.getSchedule());
-        parameters.put("regNm", schedule.getRegNm());
         parameters.put("password", schedule.getPassword());
         parameters.put("regDt", schedule.getRegDt());
         parameters.put("modDt", schedule.getModDt());
+        parameters.put("writer_id", schedule.getWriter().getId()); // 작성자 PK 저장
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)); // PK Return
         schedule.setId(key.longValue());
@@ -45,7 +45,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         List<Object> params = new ArrayList<>();
 
         StringBuilder query = new StringBuilder()
-                .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
+                .append("SELECT id, schedule, password, reg_dt, mod_dt FROM schedule \n")
                 .append(" WHERE del_dt IS NULL \n");
 
         if (StringUtils.isNotBlank(modDt)) { // 수정일 검색조건이 있을 경우
@@ -66,7 +66,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public Optional<Schedule> findScheduleById(Long id) {
         StringBuilder query = new StringBuilder()
-                .append("SELECT id, schedule, reg_nm, password, reg_dt, mod_dt FROM schedule \n")
+                .append("SELECT id, schedule, password, reg_dt, mod_dt FROM schedule \n")
                 .append(" WHERE id = ? AND del_dt IS NULL \n");
 
         List<Schedule> resultList = jdbcTemplate.query(query.toString(), this.scheduleRowMapper(), id);
@@ -84,7 +84,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         List<Object> params = new ArrayList<>();
         params.add(schedule.getSchedule());
-        params.add(schedule.getRegNm());
         params.add(schedule.getModDt());
         params.add(schedule.getId());
 
@@ -109,7 +108,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return (rs, rowNum) -> new Schedule(
                 rs.getLong("id"),
                 rs.getString("schedule"),
-                rs.getString("reg_nm"),
                 rs.getString("password"),
                 rs.getTimestamp("reg_dt").toLocalDateTime(),
                 rs.getTimestamp("mod_dt").toLocalDateTime()

@@ -30,7 +30,7 @@ public class ScheduleResDto {
 
         this.id = schedule.getId();
         this.schedule = schedule.getSchedule();
-        this.regNm = schedule.getRegNm();
+//        this.regNm = schedule.getRegNm();
         this.regDt = formatter.format(schedule.getRegDt());
         this.modDt = formatter.format(schedule.getModDt());
     }
