@@ -1,4 +1,46 @@
-## 📂 Schedule API 명세서
+# 스파르타 내임배움캠프 일정 관리 
+
+--- 
+## 차례
+
+[ERD](#ERD)
+
+[Swagger](#Swagger-URL)
+
+[Schedule API 명세서](#Schedule-API-명세서)
+
+[Writer API 명세서](#Writer-API-명세서)
+
+---
+
+### 📋Languages
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat-square&logo=openjdk&logoColor=white)
+
+### 📚 Frameworks, Platforms and Libraries
+![Spring_Boot](http://img.shields.io/badge/-Spring_Boot-%236DB33F?style=flat-square&logo=SpringBoot&logoColor=white)
+
+### 💾 Databases
+![MySQL](http://img.shields.io/badge/-MySQL-%234479A1?style=flat-square&logo=MySQL&logoColor=white)
+
+### 🥅 Other
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=flat-square&logo=git&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=flat-square&logo=intellij-idea&logoColor=white)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat-square&logo=swagger&logoColor=white)
+![Badge](http://img.shields.io/badge/-Github-%23181717?style=flat-square&logo=GitHub&logoColor=white)
+
+---
+## 📝ERD
+![erd.png](erd.png)
+
+---
+
+## 🔍Swagger URL
+
+```
+/swagger-ui/index.html#
+```
+---
+## 📂Schedule API 명세서
 
 ### 🔍 Base URL
 
@@ -188,7 +230,7 @@
 ```
 
 ---
-## 📂 Writer API 명세서
+## 📂Writer API 명세서
 ### 🔍 Base URL
 
 ```
@@ -206,7 +248,7 @@
 
 ---
 
-### ✅ 1. 일정 등록
+### ✅ 1. 작성자 등록
 
 - **URL** : `POST /api/writer`
 - **요청 Body 필드**
@@ -266,6 +308,60 @@
   }
 }
 ```
+---
+### ✅ 2. 작성자 상세 조회
+
+- **URL** : `GET /api/writer/{id}`
+
+- **Response Example**
+
+```json
+{
+  "data": {
+    "id": 0,
+    "name": "string",
+    "email": "string",
+    "regDt": "yyyy-MM-dd HH:mm:ss",
+    "modDt": "yyyy-MM-dd HH:mm:ss"
+  },
+  "result": {
+    "status": 200,
+    "code": "A000",
+    "message": "요청 처리 성공"
+  }
+}
+```
+---
+### ✅ 3. 작성자 수정
+
+- **URL** : `PUT /api/writer/{id}`
+- **Body Example (JSON)**
+
+```json
+{
+  "name": "string"
+}
+```
+
+- **Response Example**
+
+```json
+{
+  "data": {
+    "id": 0,
+    "name": "string",
+    "email": "string",
+    "regDt": "yyyy-MM-dd HH:mm:ss",
+    "modDt": "yyyy-MM-dd HH:mm:ss"
+  },
+  "result": {
+    "status": 200,
+    "code": "A000",
+    "message": "요청 처리 성공"
+  }
+}
+```
+
 ---
 ## ⚠️ 개발자 참고 - 예외 처리
 

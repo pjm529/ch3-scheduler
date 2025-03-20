@@ -2,8 +2,7 @@ CREATE TABLE `writer` (
                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'pk',
                           `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '이름',
                           `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '이메일',
-                          `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '비밀번호',
-                          `reg_dt` datetime NOT NULL COMMENT '작성일',
+                          `reg_dt` datetime NOT NULL COMMENT '등록일',
                           `mod_dt` datetime NOT NULL COMMENT '수정일',
                           PRIMARY KEY (`id`),
                           UNIQUE KEY `writer_unique` (`email`)
