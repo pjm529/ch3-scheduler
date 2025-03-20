@@ -1,5 +1,6 @@
 package com.sparta.api.writer.controller;
 
+import com.sparta.api.writer.dto.WriterModDto;
 import com.sparta.api.writer.dto.WriterReqDto;
 import com.sparta.api.writer.dto.WriterResDto;
 import com.sparta.api.writer.service.WriterService;
@@ -41,13 +42,26 @@ public class WriterController {
             summary = "작성자 상세 조회 API",
             description = "작성자 상세 조회 API"
     )
-    @ApiErrorCodeExamples({CommonExceptionResultMessage.VALID_FAIL
-            , CommonExceptionResultMessage.PW_MISMATCH
-            , CommonExceptionResultMessage.NOT_FOUND
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
             , CommonExceptionResultMessage.DB_FAIL
             , CommonExceptionResultMessage.FAIL
     })
     public BaseResponse<WriterResDto> findWriterById(@Schema(description = "작성자 PK") @PathVariable Long id) {
         return BaseResponse.from(writerService.findWriterById(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(
+            summary = "작성자 수정 API",
+            description = "작성자 수정 API, email 은 수정 불가"
+    )
+    @ApiErrorCodeExamples({CommonExceptionResultMessage.NOT_FOUND
+            , CommonExceptionResultMessage.VALID_FAIL
+            , CommonExceptionResultMessage.DB_FAIL
+            , CommonExceptionResultMessage.FAIL
+    })
+    public BaseResponse<WriterResDto> updateWriter(@Schema(description = "작성자 PK") @PathVariable Long id
+            , @RequestBody @Valid WriterModDto dto) {
+        return BaseResponse.from(writerService.updateWriter(id, dto));
     }
 }

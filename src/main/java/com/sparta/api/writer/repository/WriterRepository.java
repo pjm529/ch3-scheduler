@@ -12,4 +12,6 @@ public interface WriterRepository {
 
     Optional<Writer> findWriterById(Long id);
 
+    int updateWriter(Writer writer);
+
 }
