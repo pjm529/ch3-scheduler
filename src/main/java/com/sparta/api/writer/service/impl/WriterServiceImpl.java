@@ -1,5 +1,6 @@
 package com.sparta.api.writer.service.impl;
 
+import com.sparta.api.writer.dto.WriterModDto;
 import com.sparta.api.writer.dto.WriterReqDto;
 import com.sparta.api.writer.dto.WriterResDto;
 import com.sparta.api.writer.entity.Writer;
@@ -40,6 +41,22 @@ public class WriterServiceImpl implements WriterService {
     public WriterResDto findWriterById(Long id) {
         Writer writer = writerRepository.findWriterById(id)
                 .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "회원 조회 실패: id: " + id + " 에 해당하는 회원 없음"));
+
+        return new WriterResDto(writer);
+    }
+
+    @Override
+    public WriterResDto updateWriter(Long id, WriterModDto dto) {
+        Writer writer = writerRepository.findWriterById(id)
+                .orElseThrow(() -> new CustomException(CommonExceptionResultMessage.NOT_FOUND, "회원 조회 실패: id: " + id + " 에 해당하는 회원 없음"));
+
+        writer.setName(dto.getName());
+        writer.setModDt(LocalDateTime.now());
+
+        int result = writerRepository.updateWriter(writer);
+        if (result == 0) { // update 된 row 가 없으면 throw
+            throw new CustomException(CommonExceptionResultMessage.DB_FAIL);
+        }
 
         return new WriterResDto(writer);
     }

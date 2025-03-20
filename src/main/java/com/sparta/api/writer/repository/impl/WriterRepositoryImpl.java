@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository("writerRepository")
 public class WriterRepositoryImpl implements WriterRepository {
@@ -59,6 +56,22 @@ public class WriterRepositoryImpl implements WriterRepository {
 
         List<Writer> resultList = jdbcTemplate.query(query.toString(), this.writerRowMapper(), id);
         return resultList.stream().findAny();
+    }
+
+    @Override
+    public int updateWriter(Writer writer) {
+        StringBuilder query = new StringBuilder()
+                .append("UPDATE writer \n")
+                .append(" SET name = ? \n")
+                .append("   , mod_dt = ? \n")
+                .append(" WHERE id = ?");
+
+        List<Object> params = new ArrayList<>();
+        params.add(writer.getName());
+        params.add(writer.getModDt());
+        params.add(writer.getId());
+
+        return jdbcTemplate.update(query.toString(), params.toArray()); // update row 수 return
     }
 
     private RowMapper<Writer> writerRowMapper() {
