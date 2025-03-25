@@ -1,5 +1,7 @@
 spring:
   application.name: ch3-scheduler
+  config:
+    import: optional:classpath:config/${spring.profiles.active:local}/application.yml
   main:
     allow-bean-definition-overriding: true
 
